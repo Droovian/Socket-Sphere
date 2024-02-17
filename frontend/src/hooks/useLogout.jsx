@@ -21,6 +21,8 @@ const useLogout = () => {
       }
 
       localStorage.removeItem("chat-user");
+      localStorage.removeItem("access_token");
+      
       setAuthUser(null);
 
     } catch (error) {

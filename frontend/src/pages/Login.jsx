@@ -1,7 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import useLogin from '../hooks/useLogin';
+import { useCookies } from 'react-cookie';
 
+import { SpinnerCircular } from 'spinners-react'
 const Login = () => {
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [_, setCookies] = useCookies(["access_token"]);
+
+  const {loading, login} = useLogin();
+
+  const handleSubmit = async(e) => {
+
+    e.preventDefault();
+
+    await login(username, password);
+
+  } 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -11,20 +30,23 @@ const Login = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm bg-white p-7 rounded-lg shadow-md">
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Email address
+              Username
             </label>
             <div className="mt-2">
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="username"
+                name="username"
+                type="text"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value)
+                }}
                 required
                 className="border-2 border-black bg-white w-full px-3 py-1.5 text-gray-900 rounded-md focus:outline-none focus:ring"
               />
@@ -39,11 +61,6 @@ const Login = () => {
               >
                 Password
               </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-red-500">
-                  Forgot password?
-                </a>
-              </div>
             </div>
             <div className="mt-2">
               <input
@@ -51,6 +68,10 @@ const Login = () => {
                 name="password"
                 type="password"
                 autoComplete="off"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                }}
                 required
                 className="border-2 border-black bg-white w-full px-3 py-1.5 text-gray-900 rounded-md focus:outline-none focus:ring"
               />
@@ -62,7 +83,7 @@ const Login = () => {
               type="submit"
               className="w-full bg-black px-3 py-1.5 text-sm font-semibold text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring focus:border-blue-300"
             >
-              Sign in
+              { loading ? <SpinnerCircular/> : "Log In"}
             </button>
           </div>
         </form>
@@ -74,6 +95,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
+  
     </div>
   );
 };

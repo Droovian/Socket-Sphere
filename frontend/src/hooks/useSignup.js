@@ -2,11 +2,13 @@ import { useState } from 'react'
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuthContext } from "../context/AuthContext";
+import { useCookies } from "react-cookie";
 
 const useSignup = () => {
   
     const [loading, setLoading] = useState(false);
     const { setAuthUser } = useAuthContext();
+    const [_, setCookies] = useCookies(["access_token"]);
     const signup = async({fullName, username, password, confirmPassword, gender}) => {
 
         const success = handleErrors({fullName, username, password, confirmPassword, gender})
@@ -20,7 +22,10 @@ const useSignup = () => {
                 fullName, username, password, confirmPassword, gender
             });
 
-            console.log(res);
+            setCookies("access_token", res.data.token);
+            localStorage.setItem("access_token", res.data.token);
+            
+            // console.log(res);
             toast.success("Signed up successfully!");
 
             localStorage.setItem("chat-user", JSON.stringify(res.data));
