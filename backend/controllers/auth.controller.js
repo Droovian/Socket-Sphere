@@ -1,6 +1,6 @@
-import generateToken from "../middleware/token.js";
 import User from "../models/user.model.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const signup = async (req, res) => {
     
@@ -37,13 +37,15 @@ export const signup = async (req, res) => {
 
         if(newUser){
 
-            generateToken(newUser._id, res);
+            const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET);
+
             await newUser.save();
-            res.status(201).json({
+            return res.status(201).json({
                 _id: newUser._id,
                 fullName: newUser.fullName,
                 username: newUser.username,
-                profilePic: newUser.profilePic
+                profilePic: newUser.profilePic,
+                token: token
             })
         }
         else{
@@ -72,12 +74,15 @@ export const login = async (req, res) => {
             })
         }
 
-        generateToken(user._id, res);
+        const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET);
 
         res.status(200).json({
             _id: user._id,
-            fullName: user.fullName,
-            profilePic: user.profilePic,
+			fullName: user.fullName,
+			username: user.username,
+			profilePic: user.profilePic,
+            msg : "Login successful",
+            token: token
         });
     }
     catch(err){

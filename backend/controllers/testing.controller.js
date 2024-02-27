@@ -1,12 +1,14 @@
+import express from "express";
 import Conversation from '../models/convos.model.js';
 import Message from '../models/message.model.js';
 
-export const sendMessage = async(req, res) => {
-    
-    try {
+export const kuchKaro = async(req, res) => {
+    try{
         const { message } = req.body;
-        const { id: receiverId } = req.params
-        const senderId = req.user._id;
+        console.log(req.body, req.params.id, req.userId);
+        const { id } = req.params;
+        const receiverId = req.params.id;
+        const senderId = req.userId;
 
         let conversation = await Conversation.findOne({
 			participants: { $all: [senderId, receiverId] },
@@ -30,34 +32,14 @@ export const sendMessage = async(req, res) => {
 
         await Promise.all([conversation.save(),  newMessage.save()])
         
-        res.status(201).json(newMessage);
-        
-    } catch (error) {
+        res.status(201).json({
+            message : "message created"
+        })
+    }
+    catch(err){
         console.log(`Error in message controller`);
         res.status(500).json({
             message: "Internal server error"
         })
     }
 }
-
-export const getMessages = async (req, res) => {
-	try {
-		const {id: userToChatId} = req.params;
-		const senderId = req.userId;
-
-        // console.log(senderId, userToChatId);
-
-		const conversation = await Conversation.findOne({
-			participants: { $all: [senderId, userToChatId] },
-		}).populate("messages"); 
-
-		if (!conversation) return res.status(200).json([]);
-
-		const messages = conversation.messages;
-
-		res.status(200).json(messages);
-	} catch (error) {
-		console.log(`Error in getMessages controller: `, error.message);
-		res.status(500).json({ error: "Internal server error" });
-	}
-};

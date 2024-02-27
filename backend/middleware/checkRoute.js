@@ -3,14 +3,14 @@ import User from "../models/user.model.js";
 
 const checkRoute = async (req, res, next) => {
     try {   
-        const token = req.cookies.jwt;
-
+        const token = req.headers.authorization;
+        
         if(!token){
             return res.status(401).json({
                 Error: "Unauthorized to access - Need token"
             })
         }
-
+        
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         if(!decoded){
@@ -27,11 +27,11 @@ const checkRoute = async (req, res, next) => {
             })        
         }
 
-        req.user = user;
+        req.userId = decoded.userId;
 
         next();
     } catch (error) {
-        console.log(`Error in proected middleware`, error.message);
+        console.log(`Error in protected middleware`, error.message);
         res.status(500).json({
             message: "Internal server error"
         })

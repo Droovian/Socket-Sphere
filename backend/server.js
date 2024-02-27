@@ -6,18 +6,19 @@ import authRoutes from './routes/auth.js'
 import messageRoutes from './routes/message.routes.js';
 import connectToMongo from './db/connection.js';
 import userRoutes from './routes/user.route.js';
+import cors from 'cors';
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 const envPath = path.resolve(__dirname, '../.env');
 
 const app = express();
+app.use(express.json()); 
+app.use(cookieParser());
+app.use(cors());
 
 dotenv.config({ path: envPath });
 
 const PORT = process.env.PORT || 3000;
-
-app.use(express.json()); 
-app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
