@@ -11,7 +11,7 @@ const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 const envPath = path.resolve(__dirname, '../.env');
 
-const app = express();
+import { app, server } from "./socket/socket.js";
 app.use(express.json()); 
 app.use(cookieParser());
 app.use(cors());
@@ -28,9 +28,7 @@ app.use('/api/users', userRoutes);
 //     res.send("Hello world!");
 // });
 
-
-
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectToMongo();
     console.log(`server listening on port ${PORT}`);
 })
