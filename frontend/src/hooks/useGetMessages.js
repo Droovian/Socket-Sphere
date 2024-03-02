@@ -13,15 +13,15 @@ const useGetMessages = () => {
 		const getMessages = async () => {
 			setLoading(true);
 			try {
-				const res = await axios.get(`http://localhost:3000/api/messages/${selectedConversation._id}`, {
+				const res = await fetch(`http://localhost:3000/api/messages/${selectedConversation._id}`, {
                     headers:{
 						authorization: `${token}`
 					}
                 });
 
-				console.log('res is', res.data);
-		
-				setMessages(res.data);
+				const data = await res.json();
+				if(data.error) throw new Error(data.error);
+				setMessages(data);
 
 			} catch (error) {
 				toast.error(error.message);

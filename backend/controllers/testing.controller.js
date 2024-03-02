@@ -32,9 +32,8 @@ export const kuchKaro = async(req, res) => {
 
         await Promise.all([conversation.save(),  newMessage.save()])
         
-        res.status(201).json({
-            message : "message created"
-        })
+        res.status(201).json(newMessage);
+        
     }
     catch(err){
         console.log(`Error in message controller`);

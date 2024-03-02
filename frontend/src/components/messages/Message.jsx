@@ -2,14 +2,14 @@ import React from 'react'
 import useConversation from '../../zustand/useConversation';
 import { useAuthContext } from '../../context/AuthContext';
 import { extractTime } from '../../../utils/extractTime';
-const Message = ({message}) => {
+const Message = ({ message }) => {
 
-    const {authUser} = useAuthContext();
+    const { authUser } = useAuthContext();
     const { selectedConversation } = useConversation();
     const fromUser = message.senderId === authUser._id;
-    const chatClass = fromUser ? 'chat-end' : 'chat-start';
+    const chatClass = fromUser ? "chat-end" : "chat-start";
     const profilePic = fromUser ? authUser.profilePic : selectedConversation?.profilePic;
-    const bubbleColour = fromUser ? 'bg-blue-500' : "";
+    const bubbleColour = fromUser ? "bg-blue-500" : "";
     const formattedTime = extractTime(message.createdAt);
 
   return (
@@ -19,7 +19,7 @@ const Message = ({message}) => {
                 <img alt="Tailwind CSS chat bubble component" src={profilePic} />
             </div>
         </div>
-        <div className={`chat-bubble text-white ${bubbleColour}`}>
+        <div className={`chat-bubble text-white ${bubbleColour} pb-2`}>
             {message.message}
         </div>
         <div className="chat-footer opacity-50">
