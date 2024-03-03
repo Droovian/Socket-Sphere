@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { useAuthContext } from './AuthContext';
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
 const SocketContext = createContext();
 
@@ -13,6 +13,7 @@ export const SocketContextProvider = ({ children }) => {
 	const [onlineUsers, setOnlineUsers] = useState([]);
 	const { authUser } = useAuthContext();
 
+	// console.log('io conn' , io);
 	useEffect(() => {
 		if (authUser) {
 			const socket = io("http://localhost:3000", {
@@ -21,6 +22,7 @@ export const SocketContextProvider = ({ children }) => {
 				},
 			});
 
+			// console.log('SOCKET', socket);
 			setSocket(socket);
 
 			// socket.on() is used to listen to the events. can be used both on client and server side
@@ -28,7 +30,7 @@ export const SocketContextProvider = ({ children }) => {
 				setOnlineUsers(users);
 			});
 
-			return () => socket.close();
+			 return () => socket.close();
 		} else {
 			if (socket) {
 				socket.close();

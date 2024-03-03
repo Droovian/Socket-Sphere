@@ -5,11 +5,10 @@ import MessageSkeleton from '../Skeletons/MessageSkeleton';
 import useListenMessages from '../../hooks/useListenMessages';
 
 const Messages = () => {
-  const {messages, loading } = useGetMessages();
+  const { messages, loading } = useGetMessages();
   useListenMessages();
   const lastMessageRef = useRef();
-
-  const messagesArray = Array.isArray(messages) ? messages : [];
+  // const messagesArray = Array.isArray(messages) ? messages : [];
   
   useEffect(() => {
 		setTimeout(() => {
@@ -20,8 +19,8 @@ const Messages = () => {
   return (
     <div className='flex-1 overflow-auto px-4 py-1'>
         {!loading &&
-          messagesArray.length > 0 &&
-          messagesArray.map((message) => (
+          messages.length > 0 &&
+          messages.map((message) => (
             <div key={message._id}
             ref={lastMessageRef}>
               <Message message={message} />
@@ -29,7 +28,7 @@ const Messages = () => {
           ))}
 
         {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
-        {!loading && messagesArray.length === 0 && (
+        {!loading && messages.length === 0 && (
           <p className='text-center'>Send a message to start the conversation</p>
         )}
     </div>
